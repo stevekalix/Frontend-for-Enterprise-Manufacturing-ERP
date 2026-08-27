@@ -10,23 +10,26 @@
                     icon="sap-icon://menu"
                     type="Transparent"
                     press=".onSideNavButtonPress"
-                    tooltip="Toggle Navigation" />
+                    tooltip="{i18n>tooltipToggleNavigation}" />
                 <Image src="https://www.sap.com/dam/application/shared/logos/sap-logo-svg.svg" height="24px" class="sapUiSmallMarginBegin" />
-                <Title text="Enterprise Manufacturing ERP System" level="H1" class="sapUiSmallMarginBegin" />
+                <VBox class="sapUiTinyMarginBegin">
+                    <Title text="{i18n>appTitle}" level="H1" />
+                    <Text text="{i18n>appSubtitle}" class="sapUiTinyMarginTop" />
+                </VBox>
                 <ToolbarSpacer />
-                <Button icon="sap-icon://bell" type="Transparent" press=".onNotificationPress" tooltip="Notifications" />
-                <Button icon="sap-icon://customer" text="Manikandan" type="Transparent" press=".onProfilePress" tooltip="Profile" />
-                <Button icon="sap-icon://log" type="Transparent" press=".onLogoutPress" tooltip="Logout" />
+                <Button icon="sap-icon://bell" type="Transparent" press=".onNotificationPress" tooltip="{i18n>tooltipNotifications}" />
+                <Button icon="sap-icon://customer" text="{i18n>userName}" type="Transparent" press=".onProfilePress" tooltip="{i18n>tooltipProfile}" />
+                <Button icon="sap-icon://log" type="Transparent" press=".onLogoutPress" tooltip="{i18n>tooltipLogout}" />
             </tnt:ToolHeader>
         </tnt:header>
         <tnt:sideContent>
             <tnt:SideNavigation id="sideNavigation" selectedKey="dashboard" itemSelect=".onSideNavItemSelect">
                 <tnt:NavigationList>
-                    <tnt:NavigationListItem text="Dashboard" icon="sap-icon://home" key="dashboard" />
-                    <tnt:NavigationListItem text="Product" icon="sap-icon://product" key="product" />
-                    <tnt:NavigationListItem text="Bill of Materials" icon="sap-icon://clinical-tasty-recipe" key="bom" />
-                    <tnt:NavigationListItem text="Supplier" icon="sap-icon://shipping-status" key="supplier" />
-                    <tnt:NavigationListItem text="Raw Material" icon="sap-icon://factory" key="material" />
+                    <tnt:NavigationListItem text="{i18n>navDashboard}" icon="sap-icon://home" key="dashboard" />
+                    <tnt:NavigationListItem text="{i18n>navProducts}" icon="sap-icon://product" key="product" />
+                    <tnt:NavigationListItem text="{i18n>navBOM}" icon="sap-icon://clinical-tasty-recipe" key="bom" />
+                    <tnt:NavigationListItem text="{i18n>navSuppliers}" icon="sap-icon://shipping-status" key="supplier" />
+                    <tnt:NavigationListItem text="{i18n>navMaterials}" icon="sap-icon://factory" key="material" />
                 </tnt:NavigationList>
             </tnt:SideNavigation>
         </tnt:sideContent>

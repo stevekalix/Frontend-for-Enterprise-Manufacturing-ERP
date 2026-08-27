@@ -1,49 +1,49 @@
-/* Custom premium style.css for Enterprise Manufacturing ERP */
-
-/* Main layout background color under Horizon */
-.sapUiBody {
-    background-color: #f4f6f9;
+/* Dashboard additions use SAP theme parameters so they follow the selected Fiori theme. */
+.dashboardContent {
+    padding: 1rem 1.5rem 2rem;
+    box-sizing: border-box;
 }
 
-/* Premium Dashboard Card styling */
-.dashboardCard {
-    transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+.dashboardFilterPanel,
+.dashboardKpiCard,
+.dashboardChartCard,
+.dashboardTableCard {
+    border: 1px solid var(--sapList_BorderColor);
+    border-radius: 0.5rem;
+    background: var(--sapGroup_ContentBackground);
+    box-shadow: none;
     overflow: hidden;
-    background: #ffffff;
 }
 
-.dashboardCard:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -5px rgba(0, 0, 0, 0.04);
-    border-color: #2563eb;
+.dashboardKpiCard {
+    min-height: 11rem;
 }
 
-/* Card Count Styling */
-.cardCountText {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #1e3a8a;
-    margin: 10px 0;
-    text-align: center;
+.dashboardKpiCard .sapFCardHeader,
+.dashboardChartCard .sapFCardHeader,
+.dashboardTableCard .sapFCardHeader {
+    border-bottom: 1px solid var(--sapList_BorderColor);
 }
 
-/* Card Icon Box */
-.cardIconBox {
-    padding: 12px;
-    border-radius: 8px;
-    background-color: #eff6ff;
-    color: #2563eb;
-    display: inline-block;
+.dashboardCardAction {
+    margin: 0.25rem 0.75rem 0.5rem;
 }
 
-/* Spacing and alignments */
-.alignCenter {
-    text-align: center;
+.dashboardFilterActions {
+    min-height: 4rem;
 }
 
-.fullWidth {
-    width: 100%;
+.dashboardTable .sapMListTblHeaderCell {
+    background: var(--sapList_HeaderBackground);
+}
+
+@media (max-width: 37.5rem) {
+    .dashboardContent {
+        padding: 0.75rem;
+    }
+
+    .dashboardFilterActions {
+        justify-content: flex-start;
+        min-height: auto;
+    }
 }

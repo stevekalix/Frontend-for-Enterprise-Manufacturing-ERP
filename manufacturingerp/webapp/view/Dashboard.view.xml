@@ -1,87 +1,220 @@
-<mvc:View controllerName="com.manufacturing.erp.manufacturingerp.controller.Dashboard"
+<mvc:View
+    controllerName="com.manufacturing.erp.manufacturingerp.controller.Dashboard"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:f="sap.f"
     xmlns:card="sap.f.cards"
     xmlns:layout="sap.ui.layout"
-    xmlns:cssgrid="sap.ui.layout.cssgrid"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:core="sap.ui.core"
     xmlns="sap.m">
-    <f:DynamicPage id="dashboardPage" toggleHeaderOnTitleClick="false">
+    <f:DynamicPage id="dashboardPage" toggleHeaderOnTitleClick="false" busy="{dashboard>/busy}" busyIndicatorDelay="0">
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Dashboard" />
+                    <VBox>
+                        <Title text="{i18n>dashboardTitle}" level="H1" />
+                        <Text text="{i18n>dashboardSubtitle}" class="sapUiTinyMarginTop" />
+                    </VBox>
                 </f:heading>
+                <f:actions>
+                    <Button icon="sap-icon://refresh" type="Transparent" press=".onRefresh" tooltip="{i18n>dashboardRefresh}" />
+                </f:actions>
             </f:DynamicPageTitle>
         </f:title>
         <f:content>
-            <VBox>
-                <layout:Grid containerQuery="true" defaultSpan="XL3 L4 M6 S12" class="sapUiSmallMargin">
-                    
-                    <!-- Product Card -->
-                    <f:Card class="dashboardCard sapUiSmallMarginBottom">
+            <VBox class="dashboardContent">
+                <MessageStrip
+                    text="{i18n>dashboardDataError}"
+                    type="Warning"
+                    showIcon="true"
+                    showCloseButton="false"
+                    visible="{dashboard>/hasError}"
+                    class="sapUiSmallMarginBottom" />
+
+                <Panel headerText="{i18n>dashboardFilters}" class="dashboardFilterPanel sapUiSmallMarginBottom">
+                    <content>
+                        <layout:Grid defaultSpan="XL4 L4 M6 S12" hSpacing="1" vSpacing="1" class="sapUiSmallMargin">
+                            <VBox>
+                                <Label text="{i18n>filterMaterialCategory}" labelFor="materialCategoryFilter" />
+                                <ComboBox
+                                    id="materialCategoryFilter"
+                                    selectedKey="{dashboard>/filters/category}"
+                                    placeholder="{i18n>filterAllCategories}"
+                                    showClearIcon="true"
+                                    forceSelection="true"
+                                    items="{dashboard>/categories}">
+                                    <core:Item key="{dashboard>key}" text="{dashboard>text}" />
+                                </ComboBox>
+                            </VBox>
+                            <VBox>
+                                <Label text="{i18n>filterProductStatus}" labelFor="productStatusFilter" />
+                                <ComboBox
+                                    id="productStatusFilter"
+                                    selectedKey="{dashboard>/filters/status}"
+                                    placeholder="{i18n>filterAllStatuses}"
+                                    showClearIcon="true"
+                                    forceSelection="true"
+                                    items="{dashboard>/statuses}">
+                                    <core:Item key="{dashboard>key}" text="{dashboard>text}" />
+                                </ComboBox>
+                            </VBox>
+                            <HBox alignItems="End" justifyContent="End" class="dashboardFilterActions">
+                                <Button text="{i18n>filterClear}" press=".onClearFilters" class="sapUiTinyMarginEnd" />
+                                <Button text="{i18n>filterApply}" type="Emphasized" press=".onApplyFilters" />
+                            </HBox>
+                        </layout:Grid>
+                    </content>
+                </Panel>
+
+                <layout:Grid defaultSpan="XL3 L3 M6 S12" hSpacing="1" vSpacing="1" class="sapUiSmallMarginBottom">
+                    <f:Card class="dashboardKpiCard">
                         <f:header>
-                            <card:Header title="Products" subtitle="Active catalog items" iconSrc="sap-icon://product" />
+                            <card:NumericHeader
+                                title="{i18n>kpiProducts}"
+                                subtitle="{i18n>kpiProductsSubtitle}"
+                                number="{dashboard>/productsCount}"
+                                details="{i18n>kpiProductsDetails}"
+                                iconSrc="sap-icon://product"
+                                state="Neutral" />
                         </f:header>
                         <f:content>
-                            <VBox class="sapUiContentPadding" alignItems="Center" justifyContent="Center">
-                                <HBox class="cardIconBox sapUiSmallMarginBottom" alignItems="Center" justifyContent="Center">
-                                    <core:Icon xmlns:core="sap.ui.core" src="sap-icon://product" size="2rem" color="#2563eb" />
-                                </HBox>
-                                <Text text="{dashboard>/productsCount}" class="cardCountText" />
-                                <Button text="Manage Products" type="Emphasized" press=".onNavigateToProducts" class="sapUiSmallMarginTop fullWidth" icon="sap-icon://navigation-right-arrow" iconFirst="false" />
-                            </VBox>
+                            <Button text="{i18n>navProducts}" type="Transparent" press=".onNavigateToProducts" class="dashboardCardAction" />
                         </f:content>
                     </f:Card>
-
-                    <!-- BOM Card -->
-                    <f:Card class="dashboardCard sapUiSmallMarginBottom">
+                    <f:Card class="dashboardKpiCard">
                         <f:header>
-                            <card:Header title="Bill of Materials" subtitle="Product structures" iconSrc="sap-icon://clinical-tasty-recipe" />
+                            <card:NumericHeader
+                                title="{i18n>kpiMaterials}"
+                                subtitle="{i18n>kpiMaterialsSubtitle}"
+                                number="{dashboard>/materialsCount}"
+                                details="{i18n>kpiMaterialsDetails}"
+                                iconSrc="sap-icon://factory"
+                                state="Neutral" />
                         </f:header>
                         <f:content>
-                            <VBox class="sapUiContentPadding" alignItems="Center" justifyContent="Center">
-                                <HBox class="cardIconBox sapUiSmallMarginBottom" alignItems="Center" justifyContent="Center">
-                                    <core:Icon xmlns:core="sap.ui.core" src="sap-icon://clinical-tasty-recipe" size="2rem" color="#2563eb" />
-                                </HBox>
-                                <Text text="{dashboard>/bomsCount}" class="cardCountText" />
-                                <Button text="Manage BOMs" type="Emphasized" press=".onNavigateToBoms" class="sapUiSmallMarginTop fullWidth" icon="sap-icon://navigation-right-arrow" iconFirst="false" />
-                            </VBox>
+                            <Button text="{i18n>navMaterials}" type="Transparent" press=".onNavigateToMaterials" class="dashboardCardAction" />
                         </f:content>
                     </f:Card>
-
-                    <!-- Supplier Card -->
-                    <f:Card class="dashboardCard sapUiSmallMarginBottom">
+                    <f:Card class="dashboardKpiCard">
                         <f:header>
-                            <card:Header title="Suppliers" subtitle="Registered suppliers" iconSrc="sap-icon://shipping-status" />
+                            <card:NumericHeader
+                                title="{i18n>kpiSuppliers}"
+                                subtitle="{i18n>kpiSuppliersSubtitle}"
+                                number="{dashboard>/suppliersCount}"
+                                details="{i18n>kpiSuppliersDetails}"
+                                iconSrc="sap-icon://shipping-status"
+                                state="Neutral" />
                         </f:header>
                         <f:content>
-                            <VBox class="sapUiContentPadding" alignItems="Center" justifyContent="Center">
-                                <HBox class="cardIconBox sapUiSmallMarginBottom" alignItems="Center" justifyContent="Center">
-                                    <core:Icon xmlns:core="sap.ui.core" src="sap-icon://shipping-status" size="2rem" color="#2563eb" />
-                                </HBox>
-                                <Text text="{dashboard>/suppliersCount}" class="cardCountText" />
-                                <Button text="Manage Suppliers" type="Emphasized" press=".onNavigateToSuppliers" class="sapUiSmallMarginTop fullWidth" icon="sap-icon://navigation-right-arrow" iconFirst="false" />
-                            </VBox>
+                            <Button text="{i18n>navSuppliers}" type="Transparent" press=".onNavigateToSuppliers" class="dashboardCardAction" />
                         </f:content>
                     </f:Card>
-
-                    <!-- Material Card -->
-                    <f:Card class="dashboardCard sapUiSmallMarginBottom">
+                    <f:Card class="dashboardKpiCard">
                         <f:header>
-                            <card:Header title="Raw Materials" subtitle="Inventory &amp; stock levels" iconSrc="sap-icon://factory" />
+                            <card:NumericHeader
+                                title="{i18n>kpiBOM}"
+                                subtitle="{i18n>kpiBOMSubtitle}"
+                                number="{dashboard>/bomsCount}"
+                                details="{i18n>kpiBOMDetails}"
+                                iconSrc="sap-icon://clinical-tasty-recipe"
+                                state="Neutral" />
                         </f:header>
                         <f:content>
-                            <VBox class="sapUiContentPadding" alignItems="Center" justifyContent="Center">
-                                <HBox class="cardIconBox sapUiSmallMarginBottom" alignItems="Center" justifyContent="Center">
-                                    <core:Icon xmlns:core="sap.ui.core" src="sap-icon://factory" size="2rem" color="#2563eb" />
-                                </HBox>
-                                <Text text="{dashboard>/materialsCount}" class="cardCountText" />
-                                <Button text="Manage Materials" type="Emphasized" press=".onNavigateToMaterials" class="sapUiSmallMarginTop fullWidth" icon="sap-icon://navigation-right-arrow" iconFirst="false" />
-                            </VBox>
+                            <Button text="{i18n>navBOM}" type="Transparent" press=".onNavigateToBoms" class="dashboardCardAction" />
                         </f:content>
                     </f:Card>
-
                 </layout:Grid>
+
+                <layout:Grid defaultSpan="XL6 L6 M12 S12" hSpacing="1" vSpacing="1" class="sapUiSmallMarginBottom">
+                    <f:Card class="dashboardChartCard">
+                        <f:header>
+                            <card:Header title="{i18n>inventoryChartTitle}" subtitle="{i18n>inventoryChartDescription}" />
+                        </f:header>
+                        <f:content>
+                            <viz:VizFrame
+                                id="inventoryChart"
+                                vizType="column"
+                                width="100%"
+                                height="20rem"
+                                uiConfig="{applicationSet: 'fiori'}"
+                                vizProperties='{"legend":{"visible":false},"title":{"visible":false},"plotArea":{"dataLabel":{"visible":false},"colorPalette":["#0a6ed1"]},"valueAxis":{"title":{"visible":false}},"categoryAxis":{"title":{"visible":false}}}'>
+                                <viz:dataset>
+                                    <viz.data:FlattenedDataset data="{dashboard>/inventoryByCategory}">
+                                        <viz.data:dimensions>
+                                            <viz.data:DimensionDefinition name="Category" value="{dashboard>category}" />
+                                        </viz.data:dimensions>
+                                        <viz.data:measures>
+                                            <viz.data:MeasureDefinition name="Stock" value="{dashboard>stock}" />
+                                        </viz.data:measures>
+                                    </viz.data:FlattenedDataset>
+                                </viz:dataset>
+                                <viz:feeds>
+                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Stock" />
+                                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Category" />
+                                </viz:feeds>
+                            </viz:VizFrame>
+                        </f:content>
+                    </f:Card>
+                    <f:Card class="dashboardChartCard">
+                        <f:header>
+                            <card:Header title="{i18n>productStatusChartTitle}" subtitle="{i18n>productStatusChartDescription}" />
+                        </f:header>
+                        <f:content>
+                            <viz:VizFrame
+                                id="productStatusChart"
+                                vizType="donut"
+                                width="100%"
+                                height="20rem"
+                                uiConfig="{applicationSet: 'fiori'}"
+                                vizProperties='{"title":{"visible":false},"legend":{"visible":true,"position":"bottom"},"plotArea":{"dataLabel":{"visible":true,"type":"value"},"colorPalette":["#107e3e","#bb0000","#0a6ed1"]}}'>
+                                <viz:dataset>
+                                    <viz.data:FlattenedDataset data="{dashboard>/productsByStatus}">
+                                        <viz.data:dimensions>
+                                            <viz.data:DimensionDefinition name="Status" value="{dashboard>status}" />
+                                        </viz.data:dimensions>
+                                        <viz.data:measures>
+                                            <viz.data:MeasureDefinition name="Products" value="{dashboard>count}" />
+                                        </viz.data:measures>
+                                    </viz.data:FlattenedDataset>
+                                </viz:dataset>
+                                <viz:feeds>
+                                    <viz.feeds:FeedItem uid="size" type="Measure" values="Products" />
+                                    <viz.feeds:FeedItem uid="color" type="Dimension" values="Status" />
+                                </viz:feeds>
+                            </viz:VizFrame>
+                        </f:content>
+                    </f:Card>
+                </layout:Grid>
+
+                <f:Card class="dashboardTableCard">
+                    <f:header>
+                        <card:Header title="{i18n>recentProductsTitle}" subtitle="{i18n>recentProductsDescription}" />
+                    </f:header>
+                    <f:content>
+                        <Table id="recentProductsTable" items="{dashboard>/recentProducts}" noDataText="{i18n>dashboardNoData}" class="dashboardTable">
+                            <columns>
+                                <Column width="8rem"><Text text="{i18n>tableProductId}" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>tableProductName}" /></Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>tableCategory}" /></Column>
+                                <Column width="8rem" hAlign="Center"><Text text="{i18n>tableStatus}" /></Column>
+                                <Column minScreenWidth="Desktop" demandPopin="true"><Text text="{i18n>tableLastChanged}" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{dashboard>ProductId}" />
+                                        <Text text="{dashboard>ProductName}" />
+                                        <Text text="{dashboard>Category}" />
+                                        <ObjectStatus text="{dashboard>Status}" state="{path: 'dashboard>Status', formatter: '.formatter.statusState'}" />
+                                        <Text text="{path: 'dashboard>LastChangedAt', formatter: '.formatter.formatDateTime'}" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </f:content>
+                </f:Card>
             </VBox>
         </f:content>
     </f:DynamicPage>

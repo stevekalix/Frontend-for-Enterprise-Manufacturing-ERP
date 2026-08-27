@@ -1,4 +1,6 @@
-sap.ui.define([], function () {
+sap.ui.define([
+    "sap/ui/core/format/DateFormat"
+], function (DateFormat) {
     "use strict";
 
     return {
@@ -58,6 +60,25 @@ sap.ui.define([], function () {
                 return "0.00 " + (sCurrency || "");
             }
             return parseFloat(fPrice).toFixed(2) + " " + (sCurrency || "");
+        },
+
+        /**
+         * Formats an OData date value for display in a table.
+         * @public
+         * @param {Date|string} vValue Date value
+         * @returns {string} Localized date and time
+         */
+        formatDateTime: function (vValue) {
+            if (!vValue) {
+                return "";
+            }
+            var oDate = vValue instanceof Date ? vValue : new Date(vValue);
+            if (isNaN(oDate.getTime())) {
+                return "";
+            }
+            return DateFormat.getDateTimeInstance({
+                style: "medium"
+            }).format(oDate);
         }
     };
 });
